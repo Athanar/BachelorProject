@@ -20,8 +20,11 @@ creatable_tables = []
 cols = [Column(col.name, col.type) for col in meta.tables['weather_conditions'].columns]
 new_table = Table(
     'new_table', meta3,
+    *cols,
+    Column('sourcekey', VARCHAR(length=4000)),
+    Column('checksum', VARCHAR(length=32)),
     Column('test', VARCHAR(length=100)),
-    *cols
+    Column('test', VARCHAR(length=100)),
 )
 for table in meta.tables:
     if table not in meta2.tables:

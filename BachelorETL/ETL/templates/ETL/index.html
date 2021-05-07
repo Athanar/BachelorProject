@@ -1,0 +1,103 @@
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery="slim" %}
+
+
+<div class="container">
+  <div class="row">
+    <h1>Choose database connections for ETL generation</h1>
+  </div> 
+  <form action= {% url 'connections' %} method="post" class="form"> 
+  {% csrf_token %}
+  <div class="row">
+    
+    <div class="col">
+        <h3>Source connection</h3>
+        
+            
+            <div class="row">
+                <label for='conn_name'>Connection name</label>
+                <input type='text' name='conn_name' id='conn_name' class="form-control" required/>
+            </div>
+            <div class="row">
+                <label for='idselect'>Database selection</label>
+                <select  
+                    class="form-select form-select-sm" 
+                    aria-label=".form-select-sm example"
+                    id='dbselect'
+                    name='dbselect'
+                >
+                    <option value="postgresql">PostgreSQL</option>
+                    <option value="mssql+pyodbc">SQL server</option>
+                </select>
+            </div>
+            <div class="row">
+                <label for='host'>Host</label>
+                <input type='text' name='host' id='host' class="form-control" required/>
+            </div>
+            <div class="row">
+                <label for='db'>Database name</label>
+                <input type='text' name='db' id='db' class="form-control" required/>
+            </div>
+            <div class="row">
+                <label for='schema'>Schema name</label>
+                <input type='text' name='schema' id='schema' class="form-control" required/>
+            </div>
+            <div class="row">
+                <label for='username'>Username</label>
+                <input type='text' name='username' id='username' class="form-control" required/>
+            </div>
+            <div class="row">
+                <label for='password'>Password</label>
+                <input type='password' name='password' id='password' class="form-control" required/>
+            </div>
+    </div>
+    <div class='col'></div>
+    <div class="col">
+        <h3>Target connection</h3>
+            <div class="row">
+                <label for='conn_name_t'>Connection name</label>
+                <input type='text' name='conn_name_t' id='conn_name_t' class="form-control" required/>
+            </div>
+            <div class="row">
+                <label for='idselect_t'>Database selection</label>
+                <select  
+                    class="form-select form-select-sm" 
+                    aria-label=".form-select-sm example"
+                    name='dbselect_t'
+                    id='dbselect_t'
+                >
+                    <option value="postgresql">PostgreSQL</option>
+                    <option value="mssql+pyodbc">SQL server</option>
+                </select>
+            </div>
+            <div class="row">
+                <label for='host_t'>Host</label>
+                <input type='text' name='host_t' id='host_t' class="form-control" required/>
+            </div>
+            <div class="row">
+                <label for='db_t'>Database name</label>
+                <input type='text' name='db_t' id='db_t' class="form-control" required/>
+            </div>
+            <div class="row">
+                <label for='schema_t'>Schema name</label>
+                <input type='text' name='schema_t' id='schema_t' class="form-control" required/>
+            </div>
+            <div class="row">
+                <label for='username_t'>Username</label>
+                <input type='text' name='username_t' id='username_t' class="form-control" required/>
+            </div>
+            <div class="row">
+                <label for='password_t'>Password</label>
+                <input type='password' name='password_t' id='password_t' class="form-control" required/>
+            </div>
+            
+        <div class="row">
+            <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+        </div>
+    </div>
+  </div>
+  
+  </form>
+</div>
+

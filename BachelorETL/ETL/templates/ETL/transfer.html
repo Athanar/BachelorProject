@@ -1,0 +1,34 @@
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery="slim" %}
+
+<div class='container'>
+    <div class='row'>
+        <table>
+        {% csrf_token %}
+        <tr>
+            <th><strong>Tables in {{conn.name}}</strong></th>
+        </tr>
+        {% for table in tables %}
+            <tr>
+                <td>{{ table }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    </div>
+    <div class='row'>
+        <form action= {% url 'transferdata' %} method="post" class="form"> 
+            <input type='hidden' value="{{conn.id}}" name='conn_id'/>
+            <input type='hidden' value="{{target.id}}" name='target_id'/>
+            <input type='hidden' value="yes" name='confirm'/>
+            {% csrf_token %}
+            <label for='confirm'>Extract data for tables?</label>
+            <button type="submit" class="btn btn-primary btn-sm">Yes</button>
+        </form>
+        <form action= {% url 'transferdata' %} method="post" class="form">
+            <input type='hidden' value="no" name='confirm'/>
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary btn-sm">No</button>
+        </form>
+    </div>
+</div>

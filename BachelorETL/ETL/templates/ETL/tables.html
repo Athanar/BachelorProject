@@ -1,0 +1,25 @@
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery="slim" %}
+
+<div class='container'>
+    <table>
+        <form action= {% url 'addtables' %} method="post" class="form"> 
+            <input type='hidden' value="{{conn.id}}" name='conn_id'/>
+            <input type='hidden' value="{{target.id}}" name='target_id'/>
+        {% csrf_token %}
+        <tr>
+            <th><strong>Tables in {{conn.name}}</strong></th>
+            <th>Select tables</th>
+            <th><button type="submit" class="btn btn-primary btn-sm">Submit</button></th>
+        </tr>
+        
+            {% for table in table_list %}
+                <tr>
+                    <td>{{ table }}</td>
+                    <td><input type="checkbox" name={{ table }}></td>
+                </tr>
+            {% endfor %}
+        </form>
+    </table>
+</div>
