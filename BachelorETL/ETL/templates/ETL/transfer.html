@@ -4,19 +4,6 @@
 
 <div class='container'>
     <div class='row'>
-        <table>
-        {% csrf_token %}
-        <tr>
-            <th><strong>Tables in {{conn.name}}</strong></th>
-        </tr>
-        {% for table in tables %}
-            <tr>
-                <td>{{ table }}</td>
-            </tr>
-        {% endfor %}
-    </table>
-    </div>
-    <div class='row'>
         <form action= {% url 'transferdata' %} method="post" class="form"> 
             <input type='hidden' value="{{conn.id}}" name='conn_id'/>
             <input type='hidden' value="{{target.id}}" name='target_id'/>

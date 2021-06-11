@@ -1,8 +1,9 @@
 {% load bootstrap4 %}
 {% bootstrap_css %}
 {% bootstrap_javascript jquery="slim" %}
+{% load static %}
 
-
+<link rel="stylesheet" type="text/css" href="{% static 'ETL/custom.css' %}">
 <div class="container">
   <div class="row">
     <h1>Choose database connections for ETL generation</h1>
@@ -19,7 +20,7 @@
                 <label for='conn_name'>Connection name</label>
                 <input type='text' name='conn_name' id='conn_name' class="form-control" required/>
             </div>
-            <div class="row">
+            <div class="row input-adj">
                 <label for='idselect'>Database selection</label>
                 <select  
                     class="form-select form-select-sm" 

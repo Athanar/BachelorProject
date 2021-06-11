@@ -1,16 +1,16 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.shortcuts import render
-from ETL import models
+from . import models
 from sqlalchemy import *
 from sqlalchemy.engine import reflection
 from sqlalchemy import inspect
 from sqlalchemy.sql import func
-import pandas as pd
-import numpy as np
-import re, datetime
+import datetime
 import pytz
 import hashlib
+from .utils.Experiments import load_predictor
+from .utils.MetadataExtractor import Extractor
 
 def index_view(request):
     return render(request, 'ETL/index.html')
@@ -47,16 +47,40 @@ def receive_connections(request):
 def handle_tables(request):
     conn = models.Connection.objects.get(id=request.POST['conn_id'])
     target = models.Connection.objects.get(id=request.POST['target_id'])
+
+    return render(request, 'ETL/transfer.html', {
+        'conn': conn,
+        'target' : target
+        })
+
+def show_suggestion(request):
+    conn = models.Connection.objects.get(id=request.POST['conn_id'])
+    target = models.Connection.objects.get(id=request.POST['target_id'])
     tables = []
     for item in request.POST:
         if item not in ('conn_id', 'csrfmiddlewaretoken','target_id'):
             tables.append(item)
     create_tables(conn, target, tables, request)
-    return render(request, 'ETL/transfer.html', {
-        'tables': tables,
+
+    all_tables = models.Tables.objects.filter(connection_id=conn.id).values_list('name', flat=True)
+    ext = Extractor(conn.dialect, conn.username, conn.password, conn.database)
+    df = load_predictor('sportsdb', ext, all_tables)
+    #print(df[df])
+    fact = df[(df['gauss'] == 0) & (df['kmeans'] == 0) & ((df['varchar'] == 0))].drop_duplicates(subset=['name'])
+    new_fact = list(zip(fact.name.tolist(), fact.table.tolist()))
+    dimensions = {}
+    for table in all_tables:
+        dim = df[(df['gauss'] == 1) & (df['kmeans'] == 1) & (df['table'] == str(table))]
+        if len(dim) > 0:
+            dimensions[table] = dim['name'].tolist()
+    return render(request, 'ETL/suggestion.html', {
+        'fact': new_fact,
+        'dimensions' : dimensions,
         'conn': conn,
-        'target' : target
-        })
+        'target': target
+        }
+
+    )
 
 def transfer_data(request):
     if request.POST['confirm'] == 'yes':
@@ -129,7 +153,7 @@ def create_tables(connection, target, tables, request):
                 Column('Insert_job_id', INTEGER),
                 Column('Update_job_id', INTEGER),
             )
-            models.Tables.objects.update_or_create(
+            model, created = models.Tables.objects.update_or_create(
                 connection_id=connection.id,
                 name=meta.tables[table].name,
                 defaults={
@@ -137,4 +161,11 @@ def create_tables(connection, target, tables, request):
                     'enabled' : True
                 }
             )
+            print(created)
     meta_target.create_all(target_engine)
+
+def create_fact_table(connection, columns):
+    return 'Ok'
+
+def create_dimension_table(connection, columns):
+    return 'Ok'

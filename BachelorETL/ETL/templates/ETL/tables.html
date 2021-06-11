@@ -4,7 +4,7 @@
 
 <div class='container'>
     <table>
-        <form action= {% url 'addtables' %} method="post" class="form"> 
+        <form action= {% url 'suggestions' %} method="post" class="form"> 
             <input type='hidden' value="{{conn.id}}" name='conn_id'/>
             <input type='hidden' value="{{target.id}}" name='target_id'/>
         {% csrf_token %}

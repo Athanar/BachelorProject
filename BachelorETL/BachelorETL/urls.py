@@ -22,5 +22,6 @@ urlpatterns = [
     path('', views.index_view),
     path('connections/', views.receive_connections, name='connections'),
     path('addtables/', views.handle_tables, name='addtables'),
+    path('suggestions/', views.show_suggestion, name='suggestions'),
     path('transferdata/', views.transfer_data, name='transferdata')
 ]
